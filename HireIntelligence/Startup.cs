@@ -10,9 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HireIntelligence.Models;
-using Microsoft.EntityFrameworkCore;
-using HireIntelligence.DB;
+using NLog.Extensions.Logging;
+using SqlServer;
+using Contracts;
 
 namespace HireIntelligence
 {
@@ -28,9 +28,16 @@ namespace HireIntelligence
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddLogging(configure => configure.AddNlog)
-            services.AddDbContext<CumulativeViewsDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HireIntelligenceDbConnectionString")));
+            services.AddLogging(configure => configure.AddNLog());
+            AddSqlEngine(services);
+            services.AddTransient<IStorageManager, SqlManager>();
             services.AddControllers();
+        }
+
+        private void AddSqlEngine(IServiceCollection services)
+        {
+            var connectionString = Configuration.GetConnectionString("HireIntelligenceDbConnectionString");
+            services.AddSingleton<IStorageEngine>(sqlEngine=> new SqlEngine(connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
