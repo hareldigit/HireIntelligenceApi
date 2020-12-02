@@ -8,7 +8,7 @@ using System;
 namespace HireIntelligence.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class CumulativeViewsController :ControllerBase
     {
 
@@ -23,7 +23,7 @@ namespace HireIntelligence.Controllers
 
 
 
-        [HttpGet]
+        [HttpGet,Route("Get")]
         public IEnumerable<CumulativeView> Get()
         {
             var watch = new Stopwatch();
