@@ -4,10 +4,12 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using Contracts;
 using System;
+using Microsoft.AspNetCore.Cors;
 
 namespace HireIntelligence.Controllers
 {
     [ApiController]
+    [EnableCors("HireIntelligenceAppPolicy")]
     [Route("api/[controller]")]
     public class CumulativeViewsController :ControllerBase
     {

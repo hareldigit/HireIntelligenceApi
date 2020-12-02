@@ -29,9 +29,24 @@ namespace HireIntelligence
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddLogging(configure => configure.AddNLog());
+            AddStorage(services);
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("HireIntelligenceAppPolicy",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000");
+                    });
+            });
+
+            services.AddControllers();
+        }
+
+        private void AddStorage(IServiceCollection services)
+        {
             AddSqlEngine(services);
             services.AddTransient<IStorageManager, SqlManager>();
-            services.AddControllers();
         }
 
         private void AddSqlEngine(IServiceCollection services)
@@ -51,6 +66,8 @@ namespace HireIntelligence
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 
