@@ -18,9 +18,11 @@ namespace HireIntelligence
 {
     public class Startup
     {
+        public static IConfiguration StaticConfig { get; private set; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            StaticConfig = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -31,12 +33,16 @@ namespace HireIntelligence
             services.AddLogging(configure => configure.AddNLog());
             AddStorage(services);
 
+            var hireIntelligenceAppAddress = Configuration.GetValue<string>(
+            "HireIntelligenceApp:Address");
             services.AddCors(options =>
             {
                 options.AddPolicy("HireIntelligenceAppPolicy",
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:3000");
+                        builder.WithOrigins(hireIntelligenceAppAddress);
+                        builder.AllowAnyHeader();
+                        builder.AllowAnyMethod();
                     });
             });
 

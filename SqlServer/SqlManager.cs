@@ -33,6 +33,7 @@ namespace SqlServer
 
         public IEnumerable<CumulativeView> GetCumulativeViews(CumulativeViewsParameters parameters)
         {
+            parameters.ValidateParameters();
             var dt = m_storageEngine.GetCumulativeViews(parameters);
             var result = Map(dt);
             return result;
